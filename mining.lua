@@ -1,8 +1,9 @@
 
-GoLeft = true
+GoLeft = false
+ROW_DEPTH = 10
 
-local function DigRowAndReturn() 
-    for i=1, 100, 1  do
+local function digRowAndReturn() 
+    for i=1, ROW_DEPTH, 1  do
         turtle.dig()
         turtle.forward()
         turtle.digUp()
@@ -10,7 +11,7 @@ local function DigRowAndReturn()
     end
     turtle.turnLeft()
     turtle.turnLeft()
-    for i = 1, 100, 1 do
+    for i = 1, ROW_DEPTH, 1 do
         turtle.forward()
     end
 
@@ -36,7 +37,7 @@ local function TurnToNextRow()
     end
 end
 
-local function EmptyInventory()
+local function emptyInventory()
     local isBlock, block = turtle.inspect()
     if(isBlock and block.name == "minecraft:chest" ) then
         for i = 1, 16 do
@@ -48,8 +49,31 @@ local function EmptyInventory()
     end
 end
 
+local function goToChest(currentRow)
+    turtle.turnRight()
+    for i = 1, currentRow do
+        turtle.forward()
+    end
+    turtle.turnLeft()
+end
+
+local function goToNextRow(currentRow)
+    turtle.turnLeft()
+    for i = 1, currentRow do
+        turtle.forward()
+    end
+    turtle.dig()
+    turtle.forward()
+    turtle.digUp()
+    turtle.digDown()
+    turtle.turnLeft()
+end
+
 
 -- start main here
-
-DigRowAndReturn()
-EmptyInventory()
+for row = 1, 5 do
+    digRowAndReturn()
+    goToChest(row)
+    emptyInventory()
+    goToNextRow(row)
+end
