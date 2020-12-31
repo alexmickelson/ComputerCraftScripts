@@ -1,6 +1,7 @@
 
 GoLeft = false
-ROW_DEPTH = 10
+ROW_DEPTH = 100
+ROW_COUNT = 100
 
 local function digRowAndReturn() 
     for i=1, ROW_DEPTH, 1  do
@@ -71,7 +72,8 @@ end
 
 
 -- start main here
-for row = 1, 5 do
+-- place a two wide chest behind turtle (and to the back-left corner)
+for row = 1, ROW_COUNT do
     digRowAndReturn()
     goToChest(row)
     emptyInventory()
