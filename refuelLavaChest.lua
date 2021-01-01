@@ -17,7 +17,7 @@ end
 local function putBackEmptyBuckets()
     for i = 1, 16 do
         turtle.select(i)
-        turtle.place()
+        turtle.drop()
     end
 end
 
