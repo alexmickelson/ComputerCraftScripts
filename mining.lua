@@ -1,7 +1,7 @@
 
 GoLeft = false
-ROW_DEPTH = 100
-ROW_COUNT = 100
+ROW_DEPTH = 50
+ROW_COUNT = 10
 SINGLE_ROW = true
 
 local function digRowAndReturn() 
