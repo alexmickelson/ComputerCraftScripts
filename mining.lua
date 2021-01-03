@@ -1,6 +1,6 @@
 
 GoLeft = false
-ROW_DEPTH = 50
+ROW_DEPTH = 10
 ROW_COUNT = 10
 SINGLE_ROW = true
 
