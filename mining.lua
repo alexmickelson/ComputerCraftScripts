@@ -75,8 +75,10 @@ local function goToNextRow(currentRow)
     end
     turtle.dig()
     turtle.forward()
-    turtle.digUp()
-    turtle.digDown()
+    if not SINGLE_ROW then
+        turtle.digUp()
+        turtle.digDown()
+    end
     turtle.turnLeft()
 end
 
