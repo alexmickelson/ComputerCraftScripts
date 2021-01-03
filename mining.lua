@@ -58,7 +58,7 @@ end
 
 local function goToChest(currentRow)
     turtle.turnRight()
-    for i = 1, currentRow - 1 do
+    for i = 1, currentRow do
         -- sometimes gravel will fall behing the turtle
         if turtle.detect() then
             turtle.dig()
@@ -85,7 +85,7 @@ end
 -- place a two wide chest behind turtle (and to the back-left corner)
 for row = 1, ROW_COUNT do
     digRowAndReturn()
-    goToChest(row)
+    goToChest(row - 1)
     emptyInventory()
-    goToNextRow(row)
+    goToNextRow(row - 1)
 end
