@@ -19,6 +19,10 @@ local function digRowAndReturn()
     turtle.turnLeft()
     turtle.turnLeft()
     for i = 1, ROW_DEPTH, 1 do
+        -- sometimes gravel will fall behing the turtle
+        if turtle.detect() then
+            turtle.dig()
+        end
         turtle.forward()
     end
 
@@ -47,6 +51,7 @@ end
 local function emptyInventory()
     local isBlock, block = turtle.inspect()
     if(isBlock and block.name == "minecraft:chest" ) then
+        print("emptying chest")
         for i = 1, 16 do
             turtle.select(i)
             turtle.drop()
