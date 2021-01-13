@@ -3,6 +3,8 @@ INPUT_CHEST_X = arg[1]
 INPUT_CHEST_Y = arg[2] --not used currently
 INPUT_CHEST_Z = arg[3]
 
+print("startin librarian with " + INPUT_CHEST_X + ", " + INPUT_CHEST_Y + ", " + INPUT_CHEST_Z)
+
 local function isInFrontOfInputChest()
     local x, y, z = gps.locate()
     local xDistance = math.abs(x - INPUT_CHEST_X)
