@@ -1,4 +1,5 @@
 -- shell.run("librarian", 268, 54, 112)
+-- wget https://raw.githubusercontent.com/alexmickelson/ComputerCraftScripts/master/librarian.lua
 INPUT_CHEST_X = arg[1]
 INPUT_CHEST_Y = arg[2] --not used currently
 INPUT_CHEST_Z = arg[3]
@@ -32,4 +33,4 @@ local function goToInputChest()
     turtle.forward()
 end
 
-print(isInFrontOfInputChest())
+print(tostring(isInFrontOfInputChest()))
