@@ -25,14 +25,6 @@ local function isInFrontOfInputChest()
     end
 end
 
-local function fillInventory()
-    print("filling inventory from input chest")
-    local i = 1
-    while turtle.suck(i) do
-        i = i + 1
-    end
-end
-
 local function pointToInputChest()
     print("attempting to point toward input chest")
     local x_start, y_start, z_start = gps.locate()
@@ -73,13 +65,21 @@ local function pointToInputChest()
 end
 
 local function goToInputChest() 
-    -- chest is either in front or behind
-    while(turtle.detect()) do
-        print("rotating to find input chest")
-        turtle.turnLeft()
+    if not isInFrontOfInputChest() then
+        pointToInputChest()
+        while not isInFrontOfInputChest() do
+            turtle.forward()
+        end
     end
-    turtle.forward()
+end
+
+local function fillInventory()
+    print("filling inventory from input chest")
+    local i = 1
+    while turtle.suck(i) do
+        i = i + 1
+    end
 end
 
 -- print(tostring(isInFrontOfInputChest()))
-pointToInputChest()
+goToInputChest()
