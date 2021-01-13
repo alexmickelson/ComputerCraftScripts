@@ -1,9 +1,9 @@
-
+-- shell.run("librarian", 268, 54, 112)
 INPUT_CHEST_X = arg[1]
 INPUT_CHEST_Y = arg[2] --not used currently
 INPUT_CHEST_Z = arg[3]
 
-print("startin librarian with "..tostring(INPUT_CHEST_X)..", ".. tostring(INPUT_CHEST_Y)..", ".. tostring(INPUT_CHEST_Z))
+print("starting librarian with "..tostring(INPUT_CHEST_X)..", ".. tostring(INPUT_CHEST_Y)..", ".. tostring(INPUT_CHEST_Z))
 
 local function isInFrontOfInputChest()
     local x, y, z = gps.locate()
@@ -32,4 +32,4 @@ local function goToInputChest()
     turtle.forward()
 end
 
-isInFrontOfInputChest()
+print(isInFrontOfInputChest())
