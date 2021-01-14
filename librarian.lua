@@ -21,8 +21,13 @@ local function isInFrontOfInputChest()
         local isBlock, block = turtle.inspect()
         return isBlock and block.name == "minecraft:chest"
     else
-        return false
+        return false    
     end
+end
+
+local function turnAround()
+    turtle.turnLeft()
+    turtle.turnLeft()
 end
 
 local function pointToInputChest()
@@ -81,5 +86,58 @@ local function fillInventory()
     end
 end
 
+local function selectedItemIsInLeftChest(localIndex)
+    local left = peripheral.wrap("left")
+    for item in left.list() do
+        local localItem = turtle.getItemDetail()
+        if item.name == localItem.name then
+            return true
+        end
+    end
+end
+
+local function selectedItemIsInRightChest(localIndex)
+    local right = peripheral.wrap("right")
+    for item in right.list() do
+        local localItem = turtle.getItemDetail()
+        if item.name == localItem.name then
+            return true
+        end
+    end
+end
+
+local function tryToPlaceInventoryInAdjacentBlocks()
+    for i = 1, 16 do
+        if selectedItemIsInLeftChest(i) then
+            turtle.turnLeft()
+            turtle.select(i)
+            turtle.drop()
+            turtle.turnRight()
+        end
+        if selectedItemIsInRightChest(i) then
+            turtle.turnRight()
+            turtle.select(i)
+            turtle.drop()
+            turtle.turnLeft()
+        end
+    end
+end
+
+local function sortInventory()
+    -- stop at output chest
+    while not turtle.detect() do
+        tryToPlaceInventoryInAdjacentBlocks()
+        turtle.forward()
+    end
+    print("placing remaining inventory in output chest")
+
+    for i=1, 16 do
+        turtle.select(i)
+        turtle.drop()
+    end
+end
 -- print(tostring(isInFrontOfInputChest()))
 goToInputChest()
+fillInventory()
+turnAround()
+sortInventory()
