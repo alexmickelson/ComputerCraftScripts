@@ -1,5 +1,6 @@
 -- shell.run("librarian", 268, 54, 112)
 -- wget https://raw.githubusercontent.com/alexmickelson/ComputerCraftScripts/master/librarian.lua
+-- pastebin get aK4vGJdP librarian
 
 
 -- x positive is north
@@ -12,16 +13,19 @@ INPUT_CHEST_Z = arg[3]
 print("starting librarian with "..tostring(INPUT_CHEST_X)..", ".. tostring(INPUT_CHEST_Y)..", ".. tostring(INPUT_CHEST_Z))
 
 local function isInFrontOfInputChest()
+    print("checking if in front of input chest")
     local x, y, z = gps.locate()
     local xDistance = math.abs(x - INPUT_CHEST_X)
     -- local yDistance = math.abs(y - INPUT_CHEST_Y)
     local zDistance = math.abs(z - INPUT_CHEST_Z)
+    print("x_distance: "..xDistance)
+    print("z_distance: "..zDistance)
     if xDistance < 2 and zDistance < 2 then
         print("close to input chest")
         local isBlock, block = turtle.inspect()
         return isBlock and block.name == "minecraft:chest"
     else
-        return false    
+        return false
     end
 end
 
@@ -44,11 +48,13 @@ local function pointToInputChest()
     elseif INPUT_CHEST_Z - z_start < 0 then
         chest_direction = 'west'
     end
+    print("input chest: "..chest_direction)
 
-    while turtle.detect() do
+    local forwardSuccess, _ignore = turtle.forward()
+    while not forwardSuccess do
         turtle.turnLeft()
+        forwardSuccess, _ignore = turtle.forward()
     end
-    turtle.forward()
     local x_off, y_off, z_off = gps.locate()
     turtle.back()
 
@@ -62,9 +68,19 @@ local function pointToInputChest()
     elseif z_off - z_start < 0 then
         facing = 'west'
     end
+    print("facing: "..facing)
 
     while facing ~= chest_direction do
         turtle.turnLeft()
+        if facing == "north" then
+            facing = "west"
+        elseif facing == "west" then
+            facing = "south"
+        elseif facing == "south" then
+            facing = "east"
+        elseif facing == "east" then
+            facing = "north"
+        end
     end
     print("facing input chest: "..chest_direction)
 end
@@ -76,6 +92,7 @@ local function goToInputChest()
             turtle.forward()
         end
     end
+    print("made it to input chest")
 end
 
 local function fillInventory()
@@ -86,21 +103,21 @@ local function fillInventory()
     end
 end
 
-local function selectedItemIsInLeftChest(localIndex)
-    local left = peripheral.wrap("left")
-    for item in left.list() do
-        local localItem = turtle.getItemDetail()
-        if item.name == localItem.name then
+local function selectedItemIsInBottomChest(localIndex)
+    local bottom = peripheral.wrap("bottom")
+    for _i, item in pairs(bottom.list()) do
+        local localItem = turtle.getItemDetail(localIndex)
+        if localItem ~= nil and item.name == localItem.name then
             return true
         end
     end
 end
 
-local function selectedItemIsInRightChest(localIndex)
-    local right = peripheral.wrap("right")
-    for item in right.list() do
-        local localItem = turtle.getItemDetail()
-        if item.name == localItem.name then
+local function selectedItemIsInTopChest(localIndex)
+    local top = peripheral.wrap("top")
+    for _i, item in pairs(top.list()) do
+        local localItem = turtle.getItemDetail(localIndex)
+        if localItem ~= nil and item.name == localItem.name then
             return true
         end
     end
@@ -108,17 +125,13 @@ end
 
 local function tryToPlaceInventoryInAdjacentBlocks()
     for i = 1, 16 do
-        if selectedItemIsInLeftChest(i) then
-            turtle.turnLeft()
+        if selectedItemIsInBottomChest(i) then
             turtle.select(i)
-            turtle.drop()
-            turtle.turnRight()
+            turtle.dropDown()
         end
-        if selectedItemIsInRightChest(i) then
-            turtle.turnRight()
+        if selectedItemIsInTopChest(i) then
             turtle.select(i)
-            turtle.drop()
-            turtle.turnLeft()
+            turtle.dropUp()
         end
     end
 end
@@ -136,8 +149,21 @@ local function sortInventory()
         turtle.drop()
     end
 end
--- print(tostring(isInFrontOfInputChest()))
+
+local function frontChestIsEmpty()
+    local front = peripheral.wrap("front")
+    local items = front.list()
+    return items[1] == nil
+end
+
+-- main
 goToInputChest()
-fillInventory()
-turnAround()
-sortInventory()
+while true do
+    while frontChestIsEmpty() do
+        os.sleep(1)
+    end
+    fillInventory()
+    turnAround()
+    sortInventory()
+    goToInputChest()
+end
